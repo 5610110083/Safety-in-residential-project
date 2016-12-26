@@ -1,0 +1,83 @@
+﻿<html>
+<head>
+<title> AJAX Example by www.unzeen.com</title>
+<meta http-equiv="Content-Type" content="text/html; charset=windows-874">
+<style type="text/css">
+<!--
+body,td,th {
+    font-family: MS Sans Serif, Microsoft Sans Serif, Tahoma;
+    font-size: 10pt;
+}
+-->
+</style></head>
+ 
+<body>
+<script language="javascript">
+// Start XmlHttp Object
+function uzXmlHttp(){
+    var xmlhttp = false;
+    try{
+        xmlhttp = new ActiveXObject("Msxml2.XMLHTTP");
+    }catch(e){
+        try{
+            xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
+        }catch(e){
+            xmlhttp = false;
+        }
+    }
+ 
+    if(!xmlhttp && document.createElement){
+        xmlhttp = new XMLHttpRequest();
+    }
+    return xmlhttp;
+}
+// End XmlHttp Object
+ 
+function getresult(){
+    // เอาค่าจาก form มาเก็บลง num1,num2
+    var num1 = document.form1.num1.value;
+    var num2 = document.form1.num2.value;
+    var result;
+    var url = 'ajax.php?num1=' + num1 + '&num2='+ num2;    
+    xmlhttp = uzXmlHttp();
+    xmlhttp.open("GET", url, false);
+    xmlhttp.send(null);
+    // รับค่ากลับจาก server มาเก็บลง result
+    result = xmlhttp.responseText;
+ 
+    // นำค่าที่ได้ออกไปแสงผล
+    document.form1.result.value = result;
+ 
+}
+</script>
+ 
+<form name="form1" method="post" action="">
+  <br>
+  <table width="365" border="0" cellpadding="1" cellspacing="1" bgcolor="#CCCCCC">
+    <tr bgcolor="#FFFFFF">
+      <td colspan="2"><strong>โปรแกรมบวกเลขที่ server</strong></td>
+    </tr>
+    <tr bgcolor="#FFFFFF">
+      <td>ตัวเลขที่ 1</td>
+      <td><input name="num1" type="text" id="num1"></td>
+    </tr>
+    <tr bgcolor="#FFFFFF">
+      <td>ตัวเลขที่ 2</td>
+      <td><input name="num2" type="text" id="num2"></td>
+    </tr>
+    <tr bgcolor="#FFFFFF">
+      <td colspan="2"><strong>ค่าที่รับกลับมาจาก server </strong></td>
+    </tr>
+    <tr bgcolor="#FFFFFF">
+      <td>ผลบวก</td>
+      <td><input name="result" type="text" id="result"></td>
+    </tr>
+    <tr bgcolor="#FFFFFF">
+      <td>&nbsp;</td>
+      <td><input type="button" name="Button" value="นำไปบวกที่ server " onClick="getresult();"></td>
+    </tr>
+  </table>
+  <br>
+</form>
+</body>
+</html>
