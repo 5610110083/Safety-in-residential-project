@@ -1,0 +1,8 @@
+#! /bin/sh
+#
+# Created by configure
+
+"./configure" \
+"--prefix=/opt/apache2/" \
+"--with-pcre=/usr/local/pcre" \
+"$@"

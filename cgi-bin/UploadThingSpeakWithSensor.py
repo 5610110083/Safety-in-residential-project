@@ -1,4 +1,5 @@
 #!/usr/bin/python 
+# -*- coding: utf-8 -*-f
 # This program logs a Raspberry Pi's CPU temperature to a Thingspeak Channel
 # Help: ?
 # This program accept to use from key="abcd" in url request , When this sensor request link from get method to server.
@@ -14,9 +15,68 @@ import urllib
 
 #Import modules for CGI handling  
 import cgi, cgitb
-#Import line
-from line import LineClient, LineGroup, LineContact
 
+#=====================***** C-o-n-f-i-g--m-o-d-e *****================ #
+import ConfigParser
+
+Config = ConfigParser.ConfigParser()
+Config.read(r'setting/devices.ini')
+settingSec = Config.sections()
+#print settingSec
+
+def ConfigSectionMap(device_No):
+    dict1 = {}
+    options = Config.options(device_No)
+    for option in options:
+        try:
+            dict1[option] = Config.get(device_No, option)
+            if dict1[option] == -1:
+                DebugPrint("skip: %s" % option)
+        except:
+            print("exception on %s!" % option)
+            dict1[option] = None
+    return dict1
+
+#==============Reading config of device=============
+
+def getAmount():
+	try:
+		amountDevice = ConfigSectionMap('NumDevice')
+		return amountDevice['amount']
+	except:
+		print 'Data not found.'
+		return 0
+		
+def getName(device_No):
+	try:
+		Device = ConfigSectionMap('Device'+str(device_No))
+		return Device['name']
+	except:
+		return 'Data not found.'
+		
+def getAPI_key(device_No):
+	try:
+		Device = ConfigSectionMap('Device'+str(device_No))
+		return Device['api-key']
+	except:
+		return 'Data not found.'
+
+def getAlert_type(device_No):
+	try:
+		Device = ConfigSectionMap('Device'+str(device_No))
+		return Device['alert_type']
+	except:
+		return 'Data not found.'
+
+def getDecision_point(device_No):
+	try:
+		Device = ConfigSectionMap('Device'+str(device_No))
+		return Device['decision_point']
+	except:
+		return 'Data not found.'
+		
+#============== End Reading config of device =============
+ 
 # Create instance of FieldStorage
 form = cgi.FieldStorage() 
 
@@ -55,61 +115,78 @@ def uploadThingSpeak(data,numField):
 
 #===================== AlertCheck ======================#  
 #set rule alert
-RPi_temp = 32
-Alert = 0
-Humidity = 10
-Voice = 0 
-Light = 0
-Fire = 0
-Home_Temp = 50
-Motion = 0
-fieldName = ['RPi_temp','Alert','Humidity','Voice','Light','Fire','Home_Temp','Motion']
-field = [RPi_temp,Alert,Humidity,Voice,Light,Fire,Home_Temp,Motion]
+RPi_temp = 50.0
+Alert = 0.0
+Humidity = 10.0
+Voice = float(getDecision_point(2))
+Light = float(getDecision_point(3))
+Home_Temp = float(getDecision_point(1))
+Motion = float(getDecision_point(4))
+fieldName = ['RPi_temp','Alert','Humidity','Voice','Light','Home_Temp','Motion']
+rule = [RPi_temp,Alert,Humidity,Voice,Light,Home_Temp,Motion]
 
+def line_notify(data_value):
+	#### Alert to web
+	link = "http://siczones.coe.psu.ac.th/cgi-bin/notify.py?key=abcd&data="
+	link = link + data_value
+	f = urllib.urlopen(link)
+
+#Uncomment to test
+#line_notify('1')
 def alertCheck(data,numField):
-	if numField == 3:
+	if int(numField) == 3:
 		## if Humidity low let alert
-		if data < field[numField-1]:
-			#print '###################  Alert Active ####################'
+		if data < rule[numField-1]:
+			#print '################### Alert Active ####################'
 			uploadThingSpeak(numField,2) ## show alert graph is alert from from field 3
 			# logCreate(data,numField)
-			#print ('''<meta http-equiv="refresh" content="0.1;http://172.30.142.209/cgi-bin/notify.py?data=%s">'''%(fieldName[numField-1]))
+			#print ('''<meta http-equiv="refresh" content="0.1;http://siczones.coe.psu.ac.th/cgi-bin/notify.py?data=%s">'''%(fieldName[numField-1]))
 
-      #### Alert to web
-      # link = "http://172.30.142.209/cgi-bin/notify.py?data="
-			# link = link + (fieldName[numField-1])
-			# f = urllib.urlopen(link)
+			#### Alert to web
+			line_notify(fieldName[numField-1]+": "+str(data))
+	elif int(numField) == 4:
+		## if Humidity low let alert
+		if data > rule[numField-1]:
+			#print '################### Alert Active ####################'
+			uploadThingSpeak(numField,2) ## show alert graph is alert from from field 3
+			# logCreate(data,numField)
+			#print ('''<meta http-equiv="refresh" content="0.1;http://siczones.coe.psu.ac.th/cgi-bin/notify.py?data=%s">'''%(fieldName[numField-1]))
+
+			#### Alert to web
+			line_notify(fieldName[numField-1]+": "+ "มีเสียงพูด")
 	else:
 		## other field higher than rule let alert
-		if data > field[numField-1]:
-			#print ('################### Field%s : Alert Active ###################'%(numField))
+		if data > rule[numField-1]:
+			print ('################### Field%s : Alert Active ###################'%(numField))
 			uploadThingSpeak(numField,2) ## show alert graph is alert from from numfield 
-			#print ('''<meta http-equiv="refresh" content="0.1;http://172.30.142.209/cgi-bin/notify.py?data=%s">'''%(fieldName[numField-1]))
+			#print ('''<meta http-equiv="refresh" content="0.1;http://siczones.coe.psu.ac.th/cgi-bin/notify.py?data=%s">'''%(fieldName[numField-1]))
 			#logCreate(data,numField)
 
-      #### Alert to web
-      # link = "http://172.30.142.209/cgi-bin/notify.py?data="
-			# link = link + (fieldName[numField-1])
-			# f = urllib.urlopen(link)
-
+			#### Alert to web
+			line_notify(fieldName[numField-1]+": "+str(data))
+			
+#### Alert to web
+#a = form.getvalue('Field7')
+#line_notify(str(a))
 
 ## Uncomment test LINE alert
 #alertCheck(50,7)
 
 #===================== End alertCheck ======================#
+#===================== Start logCreate ======================#
 def logCreate(data,numField):
   #print file
-  with open("../logfile/alert.log", "a") as text_file:
+  with open("../logfiles/alert.log", "a") as text_file:
     text_file.write("\r%s > Field%s: %s" %(time.ctime(), (numField),(data) ))
     return
 ##Uncomment test LINE alert
 #logCreate(105,7)
-
+#===================== End logCreate ======================#
 #========================== HTML ===========================#
 if verify() is False:
   print 'Content-Type: text/html\n' 
   print '<html><head>'
-  homeIP = '172.30.142.209'
+  homeIP = 'siczones.coe.psu.ac.th'
   print ('''<meta http-equiv="refresh" content="0.1;http://%s">'''%(homeIP))
   print '</head></html>'
 else:
@@ -240,6 +317,8 @@ else:
                   #check alert and alert to LINE
                   alertCheck(float(Field[i-1]),i)
                   
+                  #line_notify(Field[i-1])
+                  
                   #if had more than one field.let use sleep time Please Uncomment
                   # if (form.getvalue('Field%s'%(i+1)) is not None):
                   #   #sleep for desired amount of time
@@ -255,7 +334,7 @@ else:
   <!-- ============== Footer ============ -->
     <br/><br/><div class="navbar navbar-default navbar-fixed-bottom">
       <div class="container">
-        <p class="navbar-text pull-left">Copyright 2016 - Siczones.</p>
+        <p class="navbar-text pull-left">Copyright 2016-2017 Siczones.</p>
         <!-- a id="back-to-top" href="#" class="navbar-btn btn-danger btn pull-right" role="button" data-toggle="tooltip" data-placement="left"><span class="glyphicon glyphicon-chevron-up"></span></a -->
 
         <!-- Split button -->

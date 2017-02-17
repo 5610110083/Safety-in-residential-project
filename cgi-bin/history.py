@@ -1,4 +1,5 @@
 #!/usr/bin/python 
+# -*- coding: utf-8 -*-f
 #Import modules for CGI handling  
 import cgi, cgitb
 import Cookie, os, time 
@@ -32,7 +33,7 @@ def getCookies():
 if getCookies() == False:
   print 'Content-Type: text/html\n' 
   print '<html><head>' 
-  homeIP = '172.30.142.209'
+  homeIP = 'siczones.coe.psu.ac.th'
   print ('''<meta http-equiv="refresh" content="0.1;http://%s">'''%(homeIP))
   print '</head></html>'
 else:  
@@ -148,7 +149,7 @@ else:
             </div>                 
   ''')
                 
-  print('''     <form class="btn-form"><a href="/logfile/alert.log" download="alertHistory.log">Download log file</a></form>
+  print('''     <form class="btn-form"><a href="/logfiles/alert.log" download="alertHistory.log">Download log file</a></form>
               </div>
             </div>
 
@@ -163,7 +164,7 @@ else:
   <!-- ============== Footer ============ -->
     <br/><br/><div class="navbar navbar-default navbar-fixed-bottom">
       <div class="container">
-        <p class="navbar-text pull-left">Copyright &copy; 2016 - Siczones.</p>
+        <p class="navbar-text pull-left">Copyright &copy; 2016-2017 Siczones.</p>
         <!-- a id="back-to-top" href="#" class="navbar-btn btn-danger btn pull-right" role="button" data-toggle="tooltip" data-placement="left"><span class="glyphicon glyphicon-chevron-up"></span></a -->
 
         <!-- Split button -->

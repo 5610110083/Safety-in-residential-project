@@ -16,7 +16,7 @@ pi = pigpio.pi() # Connect to local Pi.
 pi.set_mode(pin, pigpio.OUTPUT)
 
 for i in range(10):
-   pi.write(pin, 1)
+   pi.write(pin, 0)
    #time.sleep(0.2)
    #pi.write(pin, 0)
    #time.sleep(0.2)

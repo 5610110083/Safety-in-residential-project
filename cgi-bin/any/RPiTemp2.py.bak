@@ -1,0 +1,95 @@
+#!/usr/bin/env python
+# This program logs a Raspberry Pi's CPU temperature to a Thingspeak Channel
+# To use, get a Thingspeak.com account, set up a channel, and capture the Channel Key at https://thingspeak.com/docs/tutorials/ 
+# Then paste your channel ID in the code for the value of "key" below.
+# Then run as sudo python pitemp.py (access to the CPU temp requires sudo access)
+# Author : siczones
+
+import httplib, urllib
+import time
+from datetime import datetime
+import pigpio
+
+sleep = 120 # how many seconds to sleep between posts to the channel (at least 15 second)
+key = '9227DXSLR71NKKMO'  # Thingspeak channel to update
+#initial status
+Active = 1
+Alert = 0
+Humidity = 0
+Voice = 0
+Light = 0
+Fire = 0
+Temp = 0
+
+#Report Raspberry Pi internal temperature to Thingspeak Channel
+def uploadThingSpeak(data,numField):
+    while True:
+        params = urllib.urlencode({('field%d'%(numField)): data, 'key':key }) 
+        headers = {"Content-typZZe": "application/x-www-form-urlencoded","Accept": "text/plain"}
+        conn = httplib.HTTPConnection("api.thingspeak.com:80")
+        try:
+            conn.request("POST", "/update", params, headers)
+            response = conn.getresponse()
+            print ('Field%s : %s' %(numField, data))
+            #print response.status #if show 200 is success
+            print 'Status :',response.reason
+            data = response.read()
+            conn.close()
+        except:
+            print "connection failed"
+        #sleep for desired amount of time
+        time.sleep(sleep)
+        break
+
+def updateData():
+    global Active,Alert,Humidity,Voice ,Light,Fire,Temp
+
+    #Calculate CPU temperature of Raspberry Pi in Degrees C
+    temp = int(open('/sys/class/thermal/thermal_zone0/temp').read()) / 1e3 # Get Raspberry Pi CPU temp
+    Active = temp
+    Alert = 2
+    Humidity = 3
+    Voice = 4
+    Light = 5
+    Fire = 6
+    Temp = 7
+    #print ('updateData Active')
+
+
+if __name__ == "__main__":
+    while True:
+        print '=========================================================================='
+        print '*** Welcome to RPi Temp report to cloud.'
+        print ''        
+        #Show time
+        print '*** Date :' + datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+        print '*** Please enter <Ctrl+C> to skip this and continue to go to terminal.'
+		
+        updateData()
+        print '=========================================================================='
+        x = float(Active)
+        if (x > 33.0):
+			pin=21
+			pi = pigpio.pi() # Connect to local Pi.
+			pi.set_mode(pin, pigpio.OUTPUT)
+
+			for i in range(10):
+			   pi.write(pin, 0)
+			pi.stop()
+        else:
+			pin=21
+			pi = pigpio.pi() # Connect to local Pi.
+			pi.set_mode(pin, pigpio.OUTPUT)
+
+			for i in range(10):
+			   pi.write(pin, 1)
+			pi.stop()
+			
+        
+        #fields = [Active,Alert,Humidity,Voice,Light,Fire,Temp]
+        numField = 1
+        #for data in fields:
+        #    uploadThingSpeak(data,numField)
+        #    numField = numField+1
+        uploadThingSpeak(Active,1)
+        

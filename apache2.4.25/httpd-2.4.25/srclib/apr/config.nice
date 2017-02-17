@@ -1,0 +1,17 @@
+#! /bin/sh
+#
+# Created by configure
+
+"/home/pi/Desktop/apache2.4.25/httpd-2.4.25/srclib/apr/configure" \
+"--disable-option-checking" \
+"--with-pcre=/usr/local/pcre" \
+"--cache-file=/dev/null" \
+"--srcdir=/home/pi/Desktop/apache2.4.25/httpd-2.4.25/srclib/apr" \
+"--prefix=/opt/apache2/" \
+"--exec-prefix=/opt/apache2/" \
+"--libdir=/opt/apache2/lib" \
+"--includedir=/opt/apache2//include" \
+"--bindir=/opt/apache2/bin" \
+"--datadir=/opt/apache2/" \
+"--with-installbuilddir=/opt/apache2/build" \
+"$@"

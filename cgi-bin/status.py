@@ -1,4 +1,5 @@
 #!/usr/bin/python 
+# -*- coding: utf-8 -*-f
 # This program logs a Raspberry Pi's CPU temperature to a Thingspeak Channel
 # To use, get a Thingspeak.com account, set up a channel, and capture the Channel Key at https://thingspeak.com/docs/tutorials/ 
 # Then paste your channel ID in the code for the value of "key" below.
@@ -56,7 +57,7 @@ form = cgi.FieldStorage()
 if getCookies() == False:
   print 'Content-Type: text/html\n' 
   print '<html><head>' 
-  homeIP = '172.30.142.209'
+  homeIP = 'siczones.coe.psu.ac.th'
   print ('''<meta http-equiv="refresh" content="0.1;http://%s">'''%(homeIP))
   print '</head></html>'
 else:
@@ -170,7 +171,7 @@ else:
                           time.sleep(sleep)
           '''
           print ('''
-          <button href="#" data-toggle="modal"  data-target="#Field%s-modal" class="form-control" onmouseover="style.color='blue'" onmouseout="style.color='black'">%s <span class="label label-success pull-right">Field%s</span></button>
+          <button data-toggle="modal"  data-target="#Field%s-modal" class="form-control" onmouseover="style.color='blue'" onmouseout="style.color='black'">%s <span class="label label-success pull-right">Field%s</span></button>
   					<div class="modal fade" id="Field%s-modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="display: none;">
   					<div class="modal-dialog" role="document">
   						<div class="modal-content">
@@ -200,7 +201,7 @@ else:
   <!-- ============== Footer ============ -->
     <br/><br/><br/><div class="navbar navbar-default navbar-fixed-bottom">
       <div class="container">
-        <p class="navbar-text pull-left">Copyright &copy; 2016 - Siczones.</p>
+        <p class="navbar-text pull-left">Copyright &copy; 2016-2017 Siczones.</p>
         <!-- a id="back-to-top" href="#" class="navbar-btn btn-danger btn pull-right" role="button" data-toggle="tooltip" data-placement="left"><span class="glyphicon glyphicon-chevron-up"></span></a -->
 
         <!-- Split button -->

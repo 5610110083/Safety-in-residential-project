@@ -1,4 +1,5 @@
 #!/usr/bin/python 
+# -*- coding: utf-8 -*-f
 #Import modules for CGI handling  
 import cgi, cgitb
 from line import LineClient, LineGroup, LineContact
@@ -9,14 +10,14 @@ cookie_string = os.environ.get('HTTP_COOKIE')
 
 form = cgi.FieldStorage()  
 # Get data from fields
-try:
-  number = form.getvalue('number')
-except:
-  number = None
-try:
-  message = form.getvalue('message')
-except:
-  message = None
+# try:
+#   number = form.getvalue('number')
+# except:
+#   number = None
+# try:
+#   message = form.getvalue('message')
+# except:
+#   message = None
 try:
   swStatus = form.getvalue('swStatus')
 except:
@@ -38,74 +39,12 @@ def getCookies():
         else:
             return False
 
-client = ''
-NetConnectionStatus = False
-def loginLine():
-	try:
-		global client
-		client = LineClient("sic@outlook.co.th", "1234567896")
-		#client = LineClient(authToken="E1BfIh06jq9xX8j4ANU8.7s1VOrqGHwY0eQ+PV2DEwa.yPZkAqFnj3ROLP/caGZiCXgYyhCu+HBVf4NDfMy8/Bo=")
-		#status = 'Login Success'
-    # NetConnectionStatus = True
-		return True
-	except:
-    # global NetConnectionStatus
-		#print "Login Failed"
-		#status = "Login Failed"
-		return False
 
-def lineContacts():
-    status = loginLine()
-    if status is True :
-	    #print loop friend
-            print ('''<div height="250">''')
-            for i in range(len(client.contacts)):
-                      #print("No.{0} {name}".format(i, name = client.contacts[i]))
-                      name = client.contacts[i]
-                      name = str(name)
-                      name = name.replace("<LineContact", "")
-                      name = name.replace(">", "")
-                      print('''<p class="form-label">No.%s : %s</p>''' %(i,name))
-            print ('''</div>''')
-            return True
-    else :
-            print ('''<p class="form-control">LINE login failed!</p>''')
-            return False
-
-def lineGroups():
-  status = loginLine()
-  if status is True :
-    #print loop friend
-    print ('''<div height="250">''')
-    for i in range(len(client.groups)):
-      #print("No.{0} {name}".format(i, name = client.contacts[i]))
-      name = client.groups[i]
-      name = str(name)
-      name = name.replace("<", "")
-      name = name.replace("LineContact", "")
-      name = name.replace("LineGroup", "")
-      name = name.replace(">", "")
-      print('''<p class="form-label">No.%s : %s</p>''' %(i,name))
-    print ('''</div>''')
-    return True
-  else :
-    print ('''<p class="form-control">LINE login failed!</p>''')
-    return False
-
-def lineMessage(role,num,msg):
-  msg = msg + '\n[Send by WebBot]'
-  if role == 'contacts':
-    friend = client.contacts[num]
-  if role == 'groups':
-    friend = client.groups[num]
-  friend.sendMessage(msg)
-  print('''<br/><b>Before send success!</b>''')
-  return
 
 if getCookies() == False:
   print 'Content-Type: text/html\n' 
   print '<html><head>' 
-  homeIP = '172.30.142.209'
+  homeIP = 'siczones.coe.psu.ac.th'
   print ('''<meta http-equiv="refresh" content="0.1;http://%s">'''%(homeIP))
   print '</head></html>'
 else:
@@ -202,105 +141,52 @@ else:
       <div class = "container bg-all">        
           <div class="wrapper">
           <center><fieldset>
-          <h4 class="form-signin-heading">Welcome to LINE Bot on page</h4>
+          <h4 class="form-signin-heading">Welcome to LINE-Bot on page</h4>
           
           <hr class="colorgraph"><br>
           <!-- ////////////// Data //////////////// -->
           <div class="form-signin">
 
   <!-- ================= ON / OFF ======================= -->
-          <form action="lineAlert.py" method="POST" class="btn-form"><button name="swStatus" class="btn btn-lg btn-default btn-block" Type="submit" ''')
+          <form action="lineAlert.py" method="POST" class="btn-form"><button name="swStatus" class="disabled btn btn-lg btn-default btn-block" Type="submit" ''')
   if swStatus == 'on':
     print('''VALUE="off" onmouseover="style.color='green'" onmouseout="style.color='black'">On | Off<span class="label label-success pull-right">Enable</span></button></form>''')
   elif swStatus == 'off':
     print('''VALUE="on" onmouseover="style.color='red'" onmouseout="style.color='black'">On | Off<span class="label label-danger pull-right">Disable</span></button></form>''')
-  #============= Test LINE Alert =================#
-  print ("""<form action="notify.py" target="_blank" class="btn-form"><button class="btn btn-lg btn-info btn-block" Type="submit" name="data" VALUE="Test" onmouseover="style.color='yellow'" onmouseout="style.color='white'">Test LINE Alert</button></form>""")
-  
-  #============= SEND MESSEGE FRIENDS =================#
-  print('''<form action="#" class="btn-form"><button data-toggle="modal" data-target="#line-modal-client" class="btn btn-lg btn-info btn-block disabled" Type="contact" VALUE="line" onmouseover="style.color='yellow'" onmouseout="style.color='white'">Friends</button>
-  			      <div class="modal fade" id="line-modal-client" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="display: none;">
-  			      <div class="modal-dialog">
-  				    <div class="loginmodal-container">
-
-              <form action="lineAlert.py" method="post">
-                <div class="modal-header">
-                  <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                  <h4 class="modal-title" id="exampleModalLabel">LINE Client message</h4>
-                </div>
-                <div class="modal-body">
-              ''')
-  result = lineContacts()
-  if result is True:
-  	print('''	<br/>
-  						<input type="number" class="form-control" name="number" placeholder="Contact No." required="" autofocus="" min="0" max="%s" />'''%(len(client.contacts)-1))
-  	print('''	<input type="text" class="form-control" name="message" placeholder="Message" required=""/> ''')
-  	if number is not None:
-  		number = int(number)
-  		lineMessage('contacts',number,message)
-  else:
-  	print('''<h4>Please reload webpage in nexttime.</h4><br>''')
-  print(''' 
-                  </div>
-                  <div class="modal-footer">
-                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                    <button type="Reset" class="btn btn-danger" value="Reset" onmouseover="style.color='red'" onmouseout="style.color='white'">Reset</button> 
-                    <button type="Submit" class="btn btn-success" value="Send" onmouseover="style.color='yellow'" onmouseout="style.color='white'">Send message</button>
-                  </div>
-                </form>
-                
-                </div>
-  			        </div>
-  			        </div>
-  		      </form>''')
-
-    #============= SEND MESSEGE GROUP =================#
-  print('''<form action="#" class="btn-form">
-              <button data-toggle="modal" data-target="#line-modal-group" class="btn btn-lg btn-info btn-block" Type="contact" VALUE="line" onmouseover="style.color='yellow'" onmouseout="style.color='white'">Groups</button>
-              <div class="modal fade" id="line-modal-group" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" >
-              <div class="modal-dialog">
-              <div class="loginmodal-container">
-
-              <form action="lineAlert.py" method="post">
-                <div class="modal-header">
-                  <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                  <h4 class="modal-title" id="exampleModalLabel">LINE Group message</h4>
-                </div>
-                <div class="modal-body">
-          ''')
-  result = lineGroups()
-  if result is True:
-    print(''' <br/>
-              <input type="number" class="form-control" name="number" placeholder="Group No." required="" autofocus="" min="0" max="%s" />'''%(len(client.groups)-1))
-    print(''' <input type="text" class="form-control" name="message" placeholder="Message" required=""/>''')
-    if number is not None:
-      number = int(number)
-      lineMessage('groups',number,message)
-  else:
-    print('''<h4>Please reload webpage in nexttime.</h4>''')
+  #============= Test LINE Notify =================#
   print('''
-                  </div>
-                  <div class="modal-footer">
-                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                    <button type="Reset" class="btn btn-danger" value="Reset" onmouseover="style.color='yellow'" onmouseout="style.color='white'">Reset</button> 
-                    <button type="Submit" class="btn btn-success" value="Send" onmouseover="style.color='yellow'" onmouseout="style.color='white'">Send message</button>
-                  </div>
-                </form>
-
-                </div>
-                </div>
-                </div>
-            </form>''')
+        <form action="/line-bot/index.php" class="btn-form"><button class="btn btn-lg btn-info btn-block" Type="submit" VALUE="Status" onmouseover="style.color='yellow'" onmouseout="style.color='white'">LINE web-hooks</button></form>
+        <button data-toggle="modal" data-target="#line-notify-modal" class="btn btn-lg btn-info btn-block " onmouseover="style.color='yellow'" onmouseout="style.color='white'">Test LINE Notify</button> 
+        <div class="modal fade" id="line-notify-modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="display: none;">
+        <form action="notify.py" target="_blank" method="post" class="modal-dialog">
+        <div class="loginmodal-container">
+              <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="exampleModalLabel">LINE Message Notify</h4>
+              </div>
+              <div class="modal-body">
+                    <input type="text" class="form-control" name="data" placeholder="Message" required=""/>
+               </div>
+               <div class="modal-footer">
+                   <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                   <button type="Reset" class="btn btn-danger" value="Reset" onmouseover="style.color='red'" onmouseout="style.color='white'">Reset</button> 
+                   <button type="submit" class="btn btn-success" value="submit" onmouseover="style.color='yellow'" onmouseout="style.color='white'">Send message</button>
+               </div>
+         </div>
+         </form>
+         </div>
+         
+ ''')
 
   print(''' </div><br/>
             <form action="alert.py"><button class="btn btn-lg btn-primary btn-block" VALUE="Back">Back</button></form>
-          </fieldset></center>
+            </fieldset></center>
           </div>
       </div>
   <!-- ============== Footer ============ -->
     <br/><br/><div class="navbar navbar-default navbar-fixed-bottom">
       <div class="container">
-        <p class="navbar-text pull-left">Copyright &copy; 2016 - Siczones.</p>
+        <p class="navbar-text pull-left">Copyright &copy; 2016-2017 Siczones.</p>
         <!-- a id="back-to-top" href="#" class="navbar-btn btn-danger btn pull-right" role="button" data-toggle="tooltip" data-placement="left"><span class="glyphicon glyphicon-chevron-up"></span></a -->
 
         <!-- Split button -->

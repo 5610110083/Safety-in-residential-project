@@ -1,4 +1,5 @@
 #!/usr/bin/python 
+# -*- coding: utf-8 -*-f
 #Import modules for CGI handling  
 import cgi, cgitb
 import Cookie, os, time 
@@ -18,7 +19,7 @@ def getCookies():
             return False
 
 def readLog():
-  infile = "../logfile/alert.log" 
+  infile = "../logfiles/alert.log" 
   with open(infile , "rU") as f:
       f = f.readlines()
   # print f
@@ -32,7 +33,7 @@ def readLog():
 if getCookies() == False:
   print 'Content-Type: text/html\n' 
   print '<html><head>' 
-  homeIP = '172.30.142.209'
+  homeIP = 'siczones.coe.psu.ac.th'
   print ('''<meta http-equiv="refresh" content="0.1;http://%s">'''%(homeIP))
   print '</head></html>'
 else:  

@@ -60,7 +60,7 @@ void loop() {
         USE_SERIAL.print("\n[HTTP] begin...\n");
         // configure traged server and url
         //http.begin("https://192.168.1.12/test.html", "7a 9c f4 db 40 d3 62 5a 6e 21 bc 5c cc 66 c8 3e a1 45 59 38"); //HTTPS
-        String host = "http://172.30.142.209/cgi-bin/UploadThingSpeakWithSensor.py?key=abcd";
+        String host = "http://siczones.coe.psu.ac.th/cgi-bin/UploadThingSpeakWithSensor.py?key=abcd";
         String url[2];
         url[0] = host + "&Field7=" + temperature;
         url[1] = host + "&Field3=" + humidity;

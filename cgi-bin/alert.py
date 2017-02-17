@@ -1,4 +1,5 @@
 #!/usr/bin/python 
+# -*- coding: utf-8 -*-f
 #Import modules for CGI handling  
 import cgi, cgitb
 import Cookie, os, time 
@@ -76,7 +77,7 @@ def getCookies():
 if getCookies() == False:
   print 'Content-Type: text/html\n' 
   print '<html><head>' 
-  homeIP = '172.30.142.209'
+  homeIP = 'siczones.coe.psu.ac.th'
   print ('''<meta http-equiv="refresh" content="0.1;http://%s">'''%(homeIP))
   print '</head></html>'
 else:  
@@ -198,17 +199,17 @@ else:
     print "<p>Alert not working!</p>"
     pass
   print('''
-                  <form action="alert.py" method="GET" class="btn-group btn-group-justified" role="group" aria-label="...">
-                        <div class="btn-group" role="group">
-                          <button name="AlertStatus" VALUE="OFF" Type="submit" class="btn btn-default"><span class="label label-default ">OFF</span></button>
-                        </div>
-                        <div class="btn-group" role="group">
-                          <button name="AlertStatus" VALUE="ON" Type="submit" class="btn btn-default"><span class="label label-danger">Alarm !!</span></button>
-                        </div> 
-                  </form>
+			  <form action="alert.py" method="GET" class="btn-group btn-group-justified" role="group" aria-label="...">
+					<div class="btn-group" role="group">
+					  <button name="AlertStatus" VALUE="OFF" Type="submit" class="btn btn-default"><span class="label label-default ">OFF</span></button>
+					</div>
+					<div class="btn-group" role="group">
+					  <button name="AlertStatus" VALUE="ON" Type="submit" class="btn btn-default"><span class="label label-danger">Alarm !!</span></button>
+					</div> 
+			  </form>
               </fieldset>
               <br />
-              <form action="lineAlert.py" class="btn-form"><button class="disabled btn btn-lg btn-info btn-block" Type="submit" VALUE="Status" onmouseover="style.color='yellow'" onmouseout="style.color='white'">LINE Alert</button></form>
+              <form action="lineAlert.py" class="btn-form"><button class="btn btn-lg btn-info btn-block" Type="submit" VALUE="Status" onmouseover="style.color='yellow'" onmouseout="style.color='white'">LINE Alert</button></form>
               <form action="history.py" class="btn-form"><button class="btn btn-lg btn-info btn-block" Type="submit" VALUE="Status" onmouseover="style.color='yellow'" onmouseout="style.color='white'">History</button></form>
               ''')  
   print('''
@@ -221,7 +222,7 @@ else:
   <!-- ============== Footer ============ -->
     <br/><br/><div class="navbar navbar-default navbar-fixed-bottom">
       <div class="container">
-        <p class="navbar-text pull-left">Copyright &copy; 2016 - Siczones.</p>
+        <p class="navbar-text pull-left">Copyright &copy; 2016-2017 Siczones.</p>
         <!-- a id="back-to-top" href="#" class="navbar-btn btn-danger btn pull-right" role="button" data-toggle="tooltip" data-placement="left"><span class="glyphicon glyphicon-chevron-up"></span></a -->
 
         <!-- Split button -->

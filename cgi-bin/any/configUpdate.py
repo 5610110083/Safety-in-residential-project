@@ -26,7 +26,7 @@ cfgfile.close()
 # Update LINE
 section = 'LINE'
 confName = 'username'
-value = 'sic@outlook.co.th'
+value = 'sic@outlook.co.thhhh'
 config= ConfigParser.RawConfigParser()
 config.read(r'setting\config.ini')
 config.set(section,confName,value )
@@ -39,17 +39,6 @@ with open(r'setting\config.ini', 'wb') as configfile:
 section = 'MODE'
 confName = 'off'
 value = '1'
-config= ConfigParser.RawConfigParser()
-config.read(r'setting\config.ini')
-config.set(section,confName,value )
-with open(r'setting\config.ini', 'wb') as configfile:
-    config.write(configfile)
-
-
-# Update ALERT
-section = 'ALERT'
-confName = 'status'
-value = 'ON'
 config= ConfigParser.RawConfigParser()
 config.read(r'setting\config.ini')
 config.set(section,confName,value )

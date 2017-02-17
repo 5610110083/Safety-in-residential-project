@@ -1,4 +1,5 @@
 #!/usr/bin/python 
+# -*- coding: utf-8 -*-f
 import requests
 import time, Cookie 
 import cgi,cgitb
@@ -15,6 +16,6 @@ print cookie
 print 'Content-Type: text/html\n' 
 print '<html><head>' 
 # homeIP = socket.gethostbyname(socket.gethostname())
-homeIP = '172.30.142.209/'
+homeIP = 'siczones.coe.psu.ac.th/'
 print ('''<meta http-equiv="refresh" content="0.1;http://%s">'''%(homeIP))
 print '</head></html>'

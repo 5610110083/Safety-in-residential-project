@@ -16,9 +16,9 @@ else:
 section = 'MODE'
 confName = 'mode'
 config= ConfigParser.RawConfigParser()
-config.read(r'setting\config.ini')
+config.read(r'setting/devices.ini')
 config.set(section,confName,value )
-with open(r'setting\config.ini', 'wb') as configfile:
+with open(r'setting/devices.ini', 'wb') as configfile:
     config.write(configfile)
 
 print "Content-type: text/html\n\n"
