@@ -247,7 +247,7 @@ else:
 								<!-- third sensor -->
 								<tr>
 									<td>
-										Fire & Smoke Sensor
+									    Light Sensor
 									</td>
 									<td>
 										<span class="glyphicon glyphicon-remove"></span>
@@ -406,7 +406,10 @@ else:
 										Temp Sensor
 									</td>
 									<td>
-										<input type="checkbox" aria-label="Temp.">
+										<div class="row">
+										  <div class="col-sm-4"><input type="radio" name="temp-status" value="on" aria-label="Temp." checked> on</div>
+										  <div class="col-sm-8"><input type="radio" name="temp-status" value="off" aria-label="Temp."> off</div>
+										</div>										
 									</td>
 								</tr>
 								<!-- second sensor -->
@@ -415,16 +418,22 @@ else:
 										Voice detect Sensor
 									</td>
 									<td>
-										<input type="checkbox" aria-label="Temp.">
+										<div class="row">
+										  <div class="col-sm-4"><input type="radio" name="voice-status" value="on" aria-label="Temp." checked> on</div>
+										  <div class="col-sm-8"><input type="radio" name="voice-status" value="off" aria-label="Temp."> off</div>
+										</div>	
 									</td>
 								</tr>
 								<!-- third sensor -->
 								<tr>
 									<td>
-										Fire & Smoke Sensor
+										Light Sensor
 									</td>
 									<td>
-										<input type="checkbox" aria-label="Temp.">
+										<div class="row">
+										  <div class="col-sm-4"><input type="radio" name="light-status" value="on" aria-label="Temp." checked> on</div>
+										  <div class="col-sm-8"><input type="radio" name="light-status" value="off" aria-label="Temp."> off</div>
+										</div>	
 									</td>
 								</tr>
 								<!-- fourth sensor -->
@@ -433,7 +442,10 @@ else:
 										PIR Motion Sensor
 									</td>
 									<td>
-										<input type="checkbox" aria-label="Temp.">
+										<div class="row">
+										  <div class="col-sm-4"><input type="radio" name="motion-status" value="on" aria-label="Temp." checked> on</div>
+										  <div class="col-sm-8"><input type="radio" name="motion-status" value="off" aria-label="Temp."> off</div>
+										</div>	
 									</td>
 								</tr>
 							</tbody>

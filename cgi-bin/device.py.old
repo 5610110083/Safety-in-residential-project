@@ -61,7 +61,7 @@ def getAPI_key(device_No):
         return 'Data not found.'
 
 
-def getMaxMin(device_No):
+def getAlert_type(device_No):
     try:
         Device = ConfigSectionMap('Device' + str(device_No))
         return Device['alert_type']
@@ -69,7 +69,7 @@ def getMaxMin(device_No):
         return 'Data not found.'
 
 
-def getThreadHole(device_No):
+def getDecision_point(device_No):
     try:
         Device = ConfigSectionMap('Device' + str(device_No))
         return Device['decision_point']
@@ -106,21 +106,21 @@ def setName(device_No, value):
 
 def setAPI_key(device_No, value):
     cfgfile = open(r'setting/devices.ini', 'wb')
-    Config.set('Device' + str(device_No), 'api-key', value)
+    Config.set('Device' + str(device_No), 'name', value)
     Config.write(cfgfile)
     cfgfile.close()
 
 
-def setMaxMin(device_No, value):
+def setAlert_type(device_No, value):
     cfgfile = open(r'setting/devices.ini', 'wb')
-    Config.set('Device' + str(device_No), 'alert_type', value)
+    Config.set('Device' + str(device_No), 'name', value)
     Config.write(cfgfile)
     cfgfile.close()
 
 
-def setThreadHole(device_No, value):
+def setDecision_point(device_No, value):
     cfgfile = open(r'setting/devices.ini', 'wb')
-    Config.set('Device' + str(device_No), 'decision_point', value)
+    Config.set('Device' + str(device_No), 'name', value)
     Config.write(cfgfile)
     cfgfile.close()
 
@@ -129,69 +129,42 @@ def setThreadHole(device_No, value):
 
 # =====================***** E-n-d  C-o-n-f-i-g--m-o-d-e *****================ #
 
-#when edit device
 form = cgi.FieldStorage()
-DeviceName1  = form.getvalue('Device-name1')
-DeviceName2  = form.getvalue('Device-name2')
-DeviceName3  = form.getvalue('Device-name3')
-DeviceName4  = form.getvalue('Device-name4')
-AlertTh = form.getvalue('Alert-th')
-maxMin = form.getvalue('max-min')
-Device_No = 0
-
-if DeviceName1 is not None:
-	Device_No = 1
-	setName(Device_No, DeviceName1)
-	setMaxMin(Device_No, maxMin)
-	setThreadHole(Device_No, AlertTh)
-elif DeviceName2 is not None:
-	Device_No = 2
-	setName(Device_No, DeviceName2)
-	setMaxMin(Device_No, maxMin)
-	setThreadHole(Device_No, AlertTh)
-elif DeviceName3 is not None:
-	Device_No = 3
-	setName(Device_No, DeviceName3)
-	setMaxMin(Device_No, maxMin)
-	setThreadHole(Device_No, AlertTh)
-elif DeviceName4 is not None:
-	Device_No = 4
-	setName(Device_No, DeviceName4)
-	setMaxMin(Device_No, maxMin)
-	setThreadHole(Device_No, AlertTh)
-else:
-	pass
-
-
-#when add device
-newDeviceName = form.getvalue('Device-name-add') 
-newapiKeyDevice = form.getvalue('api-key-device-add')
-
+device1 = form.getvalue('device1')
+if device1 is None:
+    device1 = 'on'
 cookie = Cookie.SimpleCookie()
 cookie_string = os.environ.get('HTTP_COOKIE')
 
+
 def getCookies():
-	if not cookie_string: 
-		return False
-	else:
+    if not cookie_string:
+        return False
+    else:
+
         # load() parses the cookie string
-		cookie.load(cookie_string)
-        # Use the value attribute of the cookie to get it 
+
+        cookie.load(cookie_string)
+
+        # Use the value attribute of the cookie to get it
+
         txt = str(cookie['login'].value)
         if txt == 'success':
             return True
         else:
             return False
-            
-if getCookies() == False:
-	print 'Content-Type: text/html\n' 
-	print '<html><head>' 
-	homeIP = 'siczones.coe.psu.ac.th'
-	print ('''<meta http-equiv="refresh" content="0.1;http://%s">'''%(homeIP))
-	print '</head></html>'
+
+
+if getCookies() == True:
+    print ("Content-type:text/html\r\n\r\n") 
+    print '<html><head>'
+    homeIP = 'siczones.coe.psu.ac.th'
+    print '''<meta http-equiv="refresh" content="0.1;http://%s">''' \
+        % homeIP
+    print '</head></html>'
 else:
-	print ("Content-type:text/html\r\n\r\n") 
-	print ('''<!DOCTYPE html>
+    print ("Content-type:text/html\r\n\r\n") 
+    print '''<!DOCTYPE html>
 <html lang="en">
 <head>
 <title>Device</title>
@@ -235,8 +208,8 @@ else:
     $('#back-to-top').tooltip('show');
 });
 </script>
-</head>''')
-	print ('''
+</head>'''
+    print '''
   <body>
      <!-- ==================== Nav Tabs ======================= -->
       <nav class="nav nav-tabs navbar-default navbar-fixed-top">
@@ -280,7 +253,7 @@ else:
 			</div>
 		</div>
       <!-- ========================== Nav Tabs ======================= -->
-      <div class = "container bg-all">        
+<div class = "container bg-all">        
 	  <div class="wrapper">
 	  <center>
 	  <h4 class="form-signin-heading">Device configurations</h4>
@@ -290,48 +263,26 @@ else:
 	
 	<!-- ======================== Data ======================== -->
 	<div class="form-signin">
-	''')
-	
-	print ('''<hr><label>Change of option: </label><br>
-	DeviceName1  = %s <br>
-	DeviceName2  = %s <br>
-	DeviceName3  = %s <br>
-	DeviceName4  = %s <br>
-	AlertTh = %s <br>
-	maxMin = %s <br>
-	<hr>'''%(DeviceName1,DeviceName2,DeviceName3,DeviceName4,AlertTh,maxMin))
-	num_device = int(float(getAmount()))
-	i = 0
-	while i < num_device:
-		i = i + 1
-		print ('''<!-- ======================== Device%s ======================== -->''') %(str(i))
-		print ('''
+	'''
+    num_device = int(float(getAmount()))
+    i = 1
+    while i <= num_device:
+        print '''<!-- ======================== Device%s ======================== -->''' \
+            % str(i)
+        print '''
 		
-		<div class="panel panel-info">
-		<button class="panel-heading btn btn-sm btn-block" data-toggle="collapse" data-target="#Device%s" aria-expanded="false" aria-controls="collapseFull-Active" type="button"">
-			<label class="panel-title">Device%s : %s</label>
-		</button>
-		<div class="collapse" id="Device%s">
-			<div class="panel-body">
-				<div class="row">
-					<div class="col-sm-6">
-						<button type="button" class="btn btn-block btn-sm btn-default" data-toggle="modal" data-target="#edit-device-%s">Edit</button>
-					</div>
-					<div class="col-sm-6">
-						<button type="button" class="disabled btn btn-block btn-sm btn-danger" data-toggle="modal" data-target="#remove-device">Remove</button>
-					</div>
-				</div>				
-			
-			
-			</div>
-		</div>
+		<div class="input-group input-group-sm">
+		  <span class="input-group-addon" id="list-device">Device%s : %s</span>
+		  <button type="button" class="form-control btn-default" data-toggle="modal" data-target="#edit-device-%s">Edit</button>
+		  <button type="button" class="form-control btn-danger" data-toggle="modal" data-target="#remove-device">Remove</button>
 		</div>
 		<br>
-		''')%(str(i), str(i), getName(i), str(i), str(i))
-		print ('''<!-#============= Edit device %s =================# -->''')%(str(i))
-		print ('''
+		''' \
+            % (str(i), getName(i), str(i))
+        print '''
+		<!-#============= Edit device =================# -->
 		<div class="modal fade" id="edit-device-%s" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="display: none;">
-			<form action="#" method="get" class="modal-dialog">
+			<form action="#" target="_blank" method="post" class="modal-dialog">
 				<div class="loginmodal-container">
 					<div class="modal-header">
 						<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
@@ -346,10 +297,10 @@ else:
 								<div class="input-group">
 									<input type="number" step="0.01" class="form-control" name="Alert-th" placeholder="Thread-Hole (Current:%s)" required="" />
 									<span class="input-group-addon">									
-										<input type="radio" name="max-min" value="max" aria-label="Max" checked>Max
+										<input type="radio" name="max-min" aria-label="Max">Max
 									</span>
 									<span class="input-group-addon">
-										<input type="radio" name="max-min" value="min" aria-label="Min">Min									
+										<input type="radio" name="max-min" aria-label="Min">Min									
 									</span>
 								</div>
 								<!-- /input-group -->
@@ -369,15 +320,17 @@ else:
 				</div>
 			</form>
 		</div>
-		''')%(str(i), str(i), getName(i), getThreadHole(i))
-	print('''
-      
-  		<!-#============= Add device =================# -->
+		''' \
+            % (str(i), str(i), getName(i), getDecision_point(i))
+        i = i + 1
+
+    print '''
+		<!-#============= Add device =================# -->
 		
-		<button data-toggle="modal" data-target="#add-device" class="btn btn-block btn-success btn-lg" onmouseover="style.color='yellow'" onmouseout="style.color='white'"><span class="glyphicon glyphicon-plus"> ADD</span></button>
+		<button data-toggle="modal" data-target="#add-device" class="btn btn-success btn-lg" onmouseover="style.color='yellow'" onmouseout="style.color='white'"><span class="glyphicon glyphicon-plus"> Add</span></button>
 		
 		<div class="modal fade" id="add-device" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="display: none;">
-			<form action="#" method="get" class="modal-dialog">
+			<form action="#" target="_blank" method="post" class="modal-dialog">
 				<div class="loginmodal-container">
 					<div class="modal-header">
 						<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
@@ -386,14 +339,14 @@ else:
 					<div class="modal-body">
 						<div class="row">
 							<div class="col-lg-12">
-								<input type="text" class="form-control" name="Device-name-add" placeholder="Name" required="">
-								<input type="text" class="form-control" name="api-key-device-add" placeholder="API-Key" required="">
+								<input type="text" class="form-control" name="Device-name" placeholder="Name" required="">
+								<input type="text" class="form-control" name="api-key-device" placeholder="API-Key" required="">
 							</div>
 							<div class="col-lg-12">
 								<div class="input-group">
 									<input type="number" step="0.01" class="form-control" name="Alert-th" placeholder="Thread-Hole" required="" />
 									<span class="input-group-addon">									
-										<input type="radio" name="max-min" aria-label="Max" checked>Max
+										<input type="radio" name="max-min" aria-label="Max">Max
 									</span>
 									<span class="input-group-addon">
 										<input type="radio" name="max-min" aria-label="Min">Min									
@@ -431,5 +384,5 @@ else:
       </div>  
   </div>
   <!-- ============== End Footer ============ -->
-  </body>''')
-	print ("</html>")
+  </body>'''
+    print '</html>'
